@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkApplicationWindow" id="app_window">
+    <property name="title">GTK4 Pathfinder Game</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">6</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">10</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <child>
+          <!-- Status Label (Level, Time, Score) -->
+          <object class="GtkLabel" id="status_label">
+            <property name="label">Initializing...</property>
+            <property name="halign">start</property>
+            <style>
+              <class name="title-4"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <!-- Message Label (Instructions, Win/Lose) -->
+          <object class="GtkLabel" id="message_label">
+            <property name="label">Loading level data...</property>
+            <property name="halign">start</property>
+            <style>
+              <class name="subtitle"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <!-- Drawing Area (The Game Grid) -->
+          <object class="GtkDrawingArea" id="game_area">
+            <property name="vexpand">true</property>
+            <property name="hexpand">true</property>
+            <property name="width-request">400</property>
+            <property name="height-request">400</property>
+            <style>
+              <class name="game-area"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

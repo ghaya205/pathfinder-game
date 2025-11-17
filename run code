@@ -1,0 +1,1 @@
+gcc pathfinder_logic.c pathfinder_gui.c -o pathfinder $(pkg-config --cflags --libs gtk4) -lm
