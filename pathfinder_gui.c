@@ -206,9 +206,11 @@ static void load_css(void)
   GtkCssProvider *provider = gtk_css_provider_new();
   GdkDisplay *display = gdk_display_get_default();
   const char *css =
-      ".game-area { background-color: #1e1e1e; }"
-      "label.title-4 { font-size: 20px; font-weight: bold; color: #eeeeee; }"
-      "label.subtitle { font-size: 16px; color: #999999; }";
+      ".game-area { background-color: #ffffffff; }"
+      "label.title-4 { font-size: 20px; font-weight: bold; color: #3edfffff; }"
+      "label.subtitle { font-size: 16px; color: #4e0dffff; }"
+      "label.timer { font-size: 16px; color: #00d4ff; font-weight: bold; }";
+
   gtk_css_provider_load_from_string(provider, css);
   gtk_style_context_add_provider_for_display(display, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   g_object_unref(provider);

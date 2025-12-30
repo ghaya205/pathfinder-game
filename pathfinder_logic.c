@@ -12,11 +12,14 @@ GameData game_data;
 void load_high_score(void)
 {
     FILE *file = fopen(SCORE_FILE, "r");
-    if (file) {
+    if (file)
+    {
         if (fscanf(file, "%d", &game_data.high_score) != 1)
             game_data.high_score = 0;
         fclose(file);
-    } else {
+    }
+    else
+    {
         game_data.high_score = 0;
     }
 }
@@ -27,7 +30,8 @@ void save_high_score(void)
         game_data.high_score = game_data.score;
 
     FILE *file = fopen(SCORE_FILE, "w");
-    if (file) {
+    if (file)
+    {
         fprintf(file, "%d", game_data.high_score);
         fclose(file);
     }
@@ -37,7 +41,8 @@ void save_high_score(void)
 gboolean load_all_levels(void)
 {
     FILE *file = fopen(LEVEL_FILE, "r");
-    if (!file) {
+    if (!file)
+    {
         g_printerr("Error: Could not open level file %s\n", LEVEL_FILE);
         return FALSE;
     }
@@ -46,16 +51,21 @@ gboolean load_all_levels(void)
     int current_level = -1;
     int row_count = 0;
 
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line, sizeof(line), file))
+    {
         g_strstrip(line);
-        if (line[0] == '\0') continue;
+        if (line[0] == '\0')
+            continue;
 
-        if (strstr(line, "--- Level")) {
+        if (strstr(line, "--- Level"))
+        {
             current_level++;
-            if (current_level >= MAX_LEVELS) break;
+            if (current_level >= MAX_LEVELS)
+                break;
             row_count = 0;
 
-            if (!fgets(line, sizeof(line), file)) {
+            if (!fgets(line, sizeof(line), file))
+            {
                 g_printerr("Error: Missing size/time for level %d\n", current_level + 1);
                 fclose(file);
                 return FALSE;
@@ -64,7 +74,8 @@ gboolean load_all_levels(void)
 
             int r, c;
             double t;
-            if (sscanf(line, "%d,%d,%lf", &r, &c, &t) != 3) {
+            if (sscanf(line, "%d,%d,%lf", &r, &c, &t) != 3)
+            {
                 g_printerr("Error: Invalid size/time for level %d: '%s'\n", current_level + 1, line);
                 fclose(file);
                 return FALSE;
@@ -79,9 +90,11 @@ gboolean load_all_levels(void)
         }
 
         // grid
-        if (current_level >= 0 && current_level < MAX_LEVELS) {
+        if (current_level >= 0 && current_level < MAX_LEVELS)
+        {
             Level *level = &game_data.levels[current_level];
-            if (row_count < level->rows) {
+            if (row_count < level->rows)
+            {
                 for (int j = 0; j < level->cols; j++)
                     level->grid[row_count][j] = (line[j] != '\0') ? line[j] : '.';
                 row_count++;
@@ -97,7 +110,8 @@ gboolean load_all_levels(void)
 // --- Start level ---
 void start_level(int level_idx)
 {
-    if (level_idx >= MAX_LEVELS) {
+    if (level_idx >= MAX_LEVELS)
+    {
         game_data.state = GAME_STATE_WIN_LEVEL;
         gtk_label_set_text(GTK_LABEL(game_data.message_label),
                            "CONGRATULATIONS! You beat all levels!");
@@ -109,13 +123,15 @@ void start_level(int level_idx)
     gboolean start_found = FALSE;
     for (int i = 0; i < level->rows; i++)
         for (int j = 0; j < level->cols; j++)
-            if (level->grid[i][j] == 'S') {
+            if (level->grid[i][j] == 'S')
+            {
                 game_data.player_grid_y = i;
                 game_data.player_grid_x = j;
                 start_found = TRUE;
                 break;
             }
-    if (!start_found) {
+    if (!start_found)
+    {
         game_over("Level data is missing a start point (S)!");
         return;
     }
@@ -140,7 +156,10 @@ void game_over(const char *reason)
     save_high_score();
     char msg[128];
     snprintf(msg, sizeof(msg), "GAME OVER! %s | Press SPACE to restart Level 1.", reason);
-    gtk_label_set_text(GTK_LABEL(game_data.message_label), msg);
+    gtk_label_set_markup(
+        GTK_LABEL(game_data.message_label),
+        "<span foreground='red'><b>GAME OVER!</b></span>");
+
     update_status_labels();
     gtk_widget_queue_draw(game_data.drawing_area);
 }
@@ -151,11 +170,14 @@ void update_status_labels(void)
     char str[128];
     double time_remaining = game_data.levels[game_data.current_level_idx].time_limit - game_data.elapsed_time;
 
-    if (game_data.state == GAME_STATE_GAME_OVER) {
+    if (game_data.state == GAME_STATE_GAME_OVER)
+    {
         snprintf(str, sizeof(str),
                  "Level %d Failed | Score: %d | High Score: %d",
                  game_data.current_level_idx + 1, game_data.score, game_data.high_score);
-    } else {
+    }
+    else
+    {
         snprintf(str, sizeof(str),
                  "Level %d/%d | Time: %.1fs%s | Score: %d | High Score: %d",
                  game_data.current_level_idx + 1, MAX_LEVELS,
